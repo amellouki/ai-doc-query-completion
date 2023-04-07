@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger } from '@nestjs/common';
 import { PineconeClient } from '@pinecone-database/pinecone';
 import { PineconeStore } from 'langchain/vectorstores';
 import { OpenAIEmbeddings } from 'langchain/embeddings';
@@ -17,6 +17,7 @@ const openAiApiKey = process.env.NEXT_PUBLIC_CHAT_GPT_API_KEY;
 @Injectable()
 export class AppService {
   private readonly logger = new Logger(AppService.name);
+
   async getDocs(
     query: string,
     handleLLMNewToken: (text: string) => Promise<void>,

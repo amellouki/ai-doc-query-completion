@@ -9,10 +9,10 @@ import * as dotenv from 'dotenv';
 
 dotenv.config({ path: './.env.local' });
 
-const environment = process.env.NEXT_PUBLIC_PINECONE_ENVIRONMENT;
-const indexName = process.env.NEXT_PUBLIC_PINECONE_INDEX;
-const apiKey = process.env.NEXT_PUBLIC_PINECONE_API_KEY;
-const openAiApiKey = process.env.NEXT_PUBLIC_CHAT_GPT_API_KEY;
+const environment = process.env.PINECONE_ENVIRONMENT;
+const indexName = process.env.PINECONE_INDEX;
+const apiKey = process.env.PINECONE_API_KEY;
+const openAiApiKey = process.env.OPEN_AI_API_KEY;
 
 @Injectable()
 export class AppService {
@@ -52,6 +52,6 @@ export class AppService {
     const chain = VectorDBQAChain.fromLLM(model, vectorStore);
 
     const response = await chain.call({ query });
-    return response;
+    return { response, docs };
   }
 }

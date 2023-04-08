@@ -4,6 +4,13 @@ import { MessageEvent } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { END_COMPLETION } from './constants';
 
+function getData(type: string, content: unknown) {
+  return JSON.stringify({
+    type,
+    content,
+  });
+}
+
 @Controller('completion')
 export class AppController {
   constructor(private readonly appService: AppService) {}
@@ -17,13 +24,18 @@ export class AppController {
       let completion = '';
       const sendCompletion = async (token: string) => {
         completion += token;
-        subscriber.next({ data: JSON.stringify(completion) });
+        subscriber.next({ data: getData('response', completion) });
       };
 
       this.appService
         .getDocs(query || '', sendCompletion)
-        .then((response) => {
-          subscriber.next({ data: JSON.stringify(response.text) });
+        .then(({ response, docs }) => {
+          subscriber.next({
+            data: getData('response', response.text),
+          });
+          subscriber.next({
+            data: getData('debug', docs),
+          });
           subscriber.next({ data: END_COMPLETION });
           subscriber.complete();
         })

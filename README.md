@@ -1,7 +1,4 @@
-#WiseResponder
-
-
-## Description
+# WiseResponder
 
 Backend service that combines Pinecone's vector database and Langchain's GPT augmentation to deliver highly educated and data-aware responses
 

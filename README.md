@@ -12,6 +12,7 @@ Backend service that combines Pinecone's vector database and Langchain's GPT aug
 ## You need
 
 Node 18.15.0+
+npm 9.5.0+
 
 ## Installation
 

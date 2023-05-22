@@ -6,6 +6,7 @@ import { OpenAI } from 'langchain/llms';
 import { CallbackManager } from 'langchain/callbacks';
 import { VectorDBQAChain } from 'langchain/chains';
 import * as dotenv from 'dotenv';
+import { QUERY_EMBEDDING_MODEL } from './constants';
 
 dotenv.config({ path: './.env.local' });
 
@@ -24,7 +25,7 @@ export class AppService {
   ) {
     if (!environment || !indexName || !apiKey || !openAiApiKey) {
       throw new Error(
-        'Pinecone environment, index, openAiApiKey, and Pinecone API key must be set in environment variables',
+        'Some environment variables are not set. Please check your .env.local file.',
       );
     }
     const client = new PineconeClient();
@@ -35,7 +36,10 @@ export class AppService {
     const pineconeIndex = client.Index(indexName);
 
     const vectorStore = await PineconeStore.fromExistingIndex(
-      new OpenAIEmbeddings({ openAIApiKey: openAiApiKey }),
+      new OpenAIEmbeddings({
+        openAIApiKey: openAiApiKey,
+        modelName: QUERY_EMBEDDING_MODEL,
+      }),
       { pineconeIndex },
     );
 

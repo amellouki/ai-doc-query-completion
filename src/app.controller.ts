@@ -3,6 +3,9 @@ import { AppService } from './app.service';
 import { MessageEvent } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { END_COMPLETION } from './constants';
+import * as dotenv from 'dotenv';
+
+dotenv.config({ path: './.env.local' });
 
 function getData(type: string, content: unknown) {
   return JSON.stringify({

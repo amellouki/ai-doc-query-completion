@@ -1,9 +1,21 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ChatSessionModule } from './modules/chat-session/chat-session.module';
+import { PdfEmbeddingModule } from './modules/pdf-embedding/pdf-embedding.module';
+import { ConfigModule } from '@nestjs/config';
+import { ServicesModule } from './services/services.module';
 
 @Module({
-  imports: [],
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: ['.env.local'],
+      isGlobal: true, // Makes the ConfigModule global, no need to import it in other modules
+    }),
+    ChatSessionModule,
+    PdfEmbeddingModule,
+    ServicesModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

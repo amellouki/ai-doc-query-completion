@@ -5,6 +5,10 @@ import { ChatSessionModule } from './modules/chat-session/chat-session.module';
 import { PdfEmbeddingModule } from './modules/pdf-embedding/pdf-embedding.module';
 import { ConfigModule } from '@nestjs/config';
 import { ServicesModule } from './services/services.module';
+import { DocQuestionAnsweringModule } from './modules/doc-question-answering/doc-question-answering.module';
+import {
+  ConversationalRetrievalQaModule
+} from "./modules/conversational-retrieval-qa/conversational-retrieval-qa.module";
 
 @Module({
   imports: [
@@ -14,6 +18,8 @@ import { ServicesModule } from './services/services.module';
     }),
     ChatSessionModule,
     PdfEmbeddingModule,
+    DocQuestionAnsweringModule,
+    ConversationalRetrievalQaModule,
     ServicesModule,
   ],
   controllers: [AppController],

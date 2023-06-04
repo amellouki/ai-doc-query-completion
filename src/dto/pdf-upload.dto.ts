@@ -4,7 +4,6 @@ import { ApiProperty } from '@nestjs/swagger';
 export class PdfUploadDto {
   @ApiProperty({ type: 'string', format: 'binary' })
   file: any;
-
   @ApiProperty()
   @IsNumberString()
   blockSize: number;

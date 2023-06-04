@@ -11,9 +11,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { PineconeStore } from 'langchain/vectorstores';
 import { OpenAIEmbeddings } from 'langchain/embeddings';
 import { ConfigService } from '@nestjs/config';
-import { DOC_EMBEDDING_MODEL, ENV } from "../../constants";
+import { DOC_EMBEDDING_MODEL, ENV } from '../../constants';
 import { PineconeService } from '../../services/pinecone/pinecone.service';
-import { PdfUploadDto } from '../../dto/request/pdf-upload.dto';
+import { PdfUploadDto } from '../../dto/pdf-upload.dto';
 import { UploadedFileType } from '../../model/uploaded-file';
 import { PdfSplitterService } from '../../services/pdf-splitter/pdf-splitter.service';
 

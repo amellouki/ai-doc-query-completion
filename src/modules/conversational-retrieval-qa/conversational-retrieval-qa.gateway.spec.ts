@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConversationalRetrievalQaController } from './conversational-retrieval-qa.controller';
+import { ConversationalRetrievalQaGateway } from './conversational-retrieval-qa.gateway';
 
 describe('ConversationalRetrievalQaController', () => {
-  let controller: ConversationalRetrievalQaController;
+  let controller: ConversationalRetrievalQaGateway;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ConversationalRetrievalQaController],
+      controllers: [ConversationalRetrievalQaGateway],
     }).compile();
 
-    controller = module.get<ConversationalRetrievalQaController>(ConversationalRetrievalQaController);
+    controller = module.get<ConversationalRetrievalQaGateway>(ConversationalRetrievalQaGateway);
   });
 
   it('should be defined', () => {

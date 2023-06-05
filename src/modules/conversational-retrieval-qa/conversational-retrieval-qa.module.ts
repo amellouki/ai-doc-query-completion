@@ -1,9 +1,14 @@
 import { Module } from '@nestjs/common';
 import { ConversationalRetrievalQaService } from './conversational-retrieval-qa.service';
-import { ConversationalRetrievalQaController } from './conversational-retrieval-qa.controller';
+import { ConversationalRetrievalQaGateway } from './conversational-retrieval-qa.gateway';
+import { PineconeService } from '../../services/pinecone/pinecone.service';
 
 @Module({
-  providers: [ConversationalRetrievalQaService],
-  controllers: [ConversationalRetrievalQaController]
+  providers: [
+    ConversationalRetrievalQaGateway,
+    ConversationalRetrievalQaService,
+    PineconeService,
+  ],
+  controllers: [],
 })
 export class ConversationalRetrievalQaModule {}

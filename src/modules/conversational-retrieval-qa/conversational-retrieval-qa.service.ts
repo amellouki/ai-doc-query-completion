@@ -24,7 +24,7 @@ export class ConversationalRetrievalQaService {
 
   private constructHistory(array: HistoryItem[]): ChatMessageHistory {
     const messages = array.map((message) => {
-      switch (message.type) {
+      switch (message.fromType) {
         case 'system':
           return new SystemChatMessage(message.content);
         case 'ai':

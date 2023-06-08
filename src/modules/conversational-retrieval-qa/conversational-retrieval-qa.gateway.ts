@@ -1,15 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Logger,
-  MessageEvent,
-  Post,
-  Res,
-  Sse,
-} from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { ConversationalRetrievalQaService } from './conversational-retrieval-qa.service';
-import { Observable } from 'rxjs';
 import { END_COMPLETION } from '../../constants';
 import { ConvoRetrievalQaRequestDto } from '../../dto/convo-retrieval-qa-request.dto';
 import { Socket } from 'socket.io';

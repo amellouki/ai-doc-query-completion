@@ -33,6 +33,21 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Prisma Schema
+
+Generate your SQL migration files and run them against the database
+
+```bash
+npx prisma migrate dev --name init
+```
+
+After updating the Prisma models, in order to update the generated Prisma Client, run:
+
+```bash
+prisma generate
+```
+
+
 ## Test
 
 ```bash

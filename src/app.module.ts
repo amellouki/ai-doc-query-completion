@@ -6,9 +6,8 @@ import { PdfEmbeddingModule } from './modules/pdf-embedding/pdf-embedding.module
 import { ConfigModule } from '@nestjs/config';
 import { ServicesModule } from './services/services.module';
 import { DocQuestionAnsweringModule } from './modules/doc-question-answering/doc-question-answering.module';
-import {
-  ConversationalRetrievalQaModule
-} from "./modules/conversational-retrieval-qa/conversational-retrieval-qa.module";
+import { ConversationalRetrievalQaModule } from './modules/conversational-retrieval-qa/conversational-retrieval-qa.module';
+import { RepositoriesModule } from './repositories/repositories.module';
 
 @Module({
   imports: [
@@ -21,6 +20,7 @@ import {
     DocQuestionAnsweringModule,
     ConversationalRetrievalQaModule,
     ServicesModule,
+    RepositoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

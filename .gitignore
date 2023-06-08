@@ -27,6 +27,11 @@ lerna-debug.log*
 .settings/
 *.sublime-workspace
 
+# prisma
+/prisma/migrations
+/prisma/dev.db
+/prisma/dev.db-journal
+
 # local env files
 .env*.local
 

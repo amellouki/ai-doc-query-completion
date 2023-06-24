@@ -15,18 +15,34 @@ export class ConversationService {
   ): Promise<Conversation> {
     return this.prisma.conversation.create({ data });
   }
-  async conversationHistory(id: number): Promise<Conversation> {
-
+  async conversationHistory(id: number) {
     return this.prisma.conversation.findUnique({
       where: {
         id: id,
       },
       include: {
-        History: {
+        ChatHistory: {
           orderBy: {
             id: 'asc',
           },
         },
+      },
+    });
+  }
+
+  async getConversationById(id: number) {
+    return this.prisma.conversation.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        ChatHistory: {
+          orderBy: {
+            id: 'asc',
+          },
+        },
+        conversationModel: true,
+        retrievalLanguageModel: true,
       },
     });
   }

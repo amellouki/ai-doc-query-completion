@@ -98,6 +98,7 @@ export default class DocConversationalChain extends ConversationalRetrievalQACha
     options: {
       outputKey?: string; // not used
       returnSourceDocuments?: boolean;
+      conversationTemplate?: string;
       questionGeneratorChainOptions?: {
         llm?: BaseLanguageModel;
         template?: string;
@@ -107,11 +108,16 @@ export default class DocConversationalChain extends ConversationalRetrievalQACha
       'retriever' | 'combineDocumentsChain' | 'questionGeneratorChain'
     > = {},
   ): ConversationalRetrievalQAChain {
-    const { questionGeneratorChainOptions, verbose, ...rest } = options;
+    const {
+      questionGeneratorChainOptions,
+      conversationTemplate,
+      verbose,
+      ...rest
+    } = options;
 
     const qaChainOptions: QAChainParams = {
       prompt: new PromptTemplate({
-        template: qaTemplate,
+        template: conversationTemplate || qaTemplate,
         inputVariables: ['chat_history', 'context', 'question'],
       }),
       type: 'stuff',
@@ -120,7 +126,7 @@ export default class DocConversationalChain extends ConversationalRetrievalQACha
     const qaChain = loadQAChain(llm, qaChainOptions);
 
     const questionGeneratorChainPrompt = PromptTemplate.fromTemplate(
-      questionGeneratorChainOptions?.template ?? question_generator_template,
+      questionGeneratorChainOptions?.template || question_generator_template,
     );
     const questionGeneratorChain = new LLMChain({
       prompt: questionGeneratorChainPrompt,

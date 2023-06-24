@@ -1,40 +1,34 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ConversationService } from './repositories/conversation/conversation.service';
-import { HistoryService } from './repositories/history/history.service';
-import { Conversation, HistoryItem, Prisma } from '@prisma/client';
-import { AppendHistoryDto } from './dto/convo-retrieval-qa-request.dto';
+import { ChatHistoryService } from './repositories/chat-history/chat-history.service';
+import { Conversation, Message, Prisma } from '@prisma/client';
+import CreateConversationRequestDto from './dto/create-conversation-request.dto';
+import AppendMessageRequestDto from './dto/append-message-request.dto';
 
 @Controller('api')
 export class AppController {
   constructor(
     private conversationService: ConversationService,
-    private historyService: HistoryService,
+    private historyService: ChatHistoryService,
   ) {}
 
   @Post('/create_conversation')
-  async createConvo(@Body() request: any): Promise<Conversation> {
-    const convoData: Prisma.ConversationCreateInput = {
-      History: {
-        create: [],
-      },
+  async createConversation(
+    @Body() request: CreateConversationRequestDto,
+  ): Promise<Conversation> {
+    const conversationData: Prisma.ConversationCreateInput = {
+      title: request.title,
       retrievalLanguageModel: {
-        create: {
-          name: 'Retrieval Language Model',
-        },
+        create: request.retrievalLanguageModel,
       },
       conversationModel: {
-        create: {
-          name: 'QA Language Model',
-        },
+        create: request.conversationModel,
       },
-      human: {
-        create: {
-          name: 'Human',
-        },
+      ChatHistory: {
+        create: [],
       },
     };
-    console.log(request);
-    return this.conversationService.createConversation(convoData);
+    return this.conversationService.createConversation(conversationData);
   }
 
   @Get('conversations')
@@ -48,15 +42,17 @@ export class AppController {
   }
 
   @Post('append-to-history')
-  async appendItem(@Body() request: AppendHistoryDto): Promise<HistoryItem> {
-    const historyItemData: Prisma.HistoryItemCreateInput = {
-      ...request.historyItem,
+  async appendMessage(
+    @Body() request: AppendMessageRequestDto,
+  ): Promise<Message> {
+    const messageCreateInput: Prisma.MessageCreateInput = {
+      ...request,
       conversation: {
         connect: {
           id: request.conversationId,
         },
       },
     };
-    return this.historyService.createHistoryItem(historyItemData);
+    return this.historyService.createMessage(messageCreateInput);
   }
 }

@@ -9,3 +9,5 @@ export const ENV = {
 
 export const DOC_EMBEDDING_MODEL = 'text-search-babbage-doc-001';
 export const QUERY_EMBEDDING_MODEL = 'text-search-babbage-query-001';
+
+export const EMBEDDING_MODEL_DIMENSIONS = 2048;

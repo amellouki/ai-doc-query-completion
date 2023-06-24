@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { ConversationalRetrievalQaService } from './conversational-retrieval-qa.service';
 import { END_COMPLETION } from '../../constants';
-import { ConvoRetrievalQaRequestDto } from '../../dto/convo-retrieval-qa-request.dto';
+import { DocConversationRequestDto } from '../../dto/doc-conversation-request.dto';
 import { Socket } from 'socket.io';
 import {
   ConnectedSocket,
@@ -10,14 +10,15 @@ import {
   WebSocketGateway,
 } from '@nestjs/websockets';
 import * as dotenv from 'dotenv';
+import { ConversationService } from '../../repositories/conversation/conversation.service';
+import { Message } from '@prisma/client';
 
 dotenv.config({ path: './.env.local' });
 
-function getData(type: string, content: unknown, params?: unknown) {
+function getData(type: string, content: unknown) {
   return {
     type,
     content,
-    params,
   };
 }
 
@@ -31,29 +32,48 @@ function getData(type: string, content: unknown, params?: unknown) {
 export class ConversationalRetrievalQaGateway {
   private readonly logger = new Logger(ConversationalRetrievalQaGateway.name);
 
-  constructor(private service: ConversationalRetrievalQaService) {
-    this.logger.log(process.env.ALLOWED_DOMAINS?.split(','));
-  }
+  constructor(
+    private service: ConversationalRetrievalQaService,
+    private conversationService: ConversationService,
+  ) {}
 
   @SubscribeMessage('getCompletion')
-  getCompletion(
-    @MessageBody() request: ConvoRetrievalQaRequestDto,
+  async getCompletion(
+    @MessageBody() request: DocConversationRequestDto,
     @ConnectedSocket() client: Socket,
   ) {
-    const { question, history } = request;
-    const sendCompletion = async (token: string, chainType: string) => {
-      client.emit(
-        'data',
-        getData('token', token, {
-          chainType,
-        }),
-      );
+    const { question, conversationId } = request;
+
+    this.logger.log(request);
+
+    const conversation = await this.conversationService.getConversationById(
+      conversationId,
+    );
+
+    this.logger.log(conversation);
+    const sendToken = async (tokenMessage: Omit<Message, 'id'>) => {
+      client.emit('data', getData('token', tokenMessage));
+    };
+    const sendRetrieval = async (retrievedStandaloneQuestion: Message) => {
+      client.emit('data', {
+        type: 'retrieval',
+        content: retrievedStandaloneQuestion,
+      });
+    };
+    const sendConfirmQuestion = (question: Message) => {
+      client.emit('data', {
+        type: 'question',
+        content: question,
+      });
     };
     this.service
-      .getCompletion(question || '', history, sendCompletion)
-      .then(({ text, sourceDocuments }) => {
-        client.emit('data', getData('response', text));
-        client.emit('data', getData('resources', sourceDocuments));
+      .getCompletion(question || '', conversation, {
+        sendToken,
+        sendRetrieval,
+        sendConfirmQuestion,
+      })
+      .then((response) => {
+        client.emit('data', getData('response', response));
         client.emit('event', { state: END_COMPLETION });
         client.disconnect();
       })
